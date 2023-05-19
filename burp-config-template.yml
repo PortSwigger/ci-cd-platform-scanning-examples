@@ -1,0 +1,60 @@
+# Use this file to configure your scan. Enter the values after the colon for each parameter. 
+# Comments are marked by the # symbol. List entries are marked by two spaces, a hyphen and then another space.
+
+enterpriseServer:
+  url: # Enter the URL for your Enterprise server. 
+  apiKey: # Enter the API key for your API user.
+
+
+site:
+  correlationId:  # If you define a correlationId, you can view the results of your scan on your Burp Suite Enterprise Edition dashboard. 
+  # Burp Suite Enterprise Edition uses the correlation ID as the site name. You can use a maximum of 64 characters.
+
+  startUrls: # A list of URLs that Burp Scanner starts scanning from. Example:
+  #  - www.vulnerable-website.com/
+  #  - www.ginandjuice.shop/
+
+  # Detailed scope configuration settings
+  inScopeUrlPrefixes: # A list of URLs that you want to allow Burp Scanner to visit. The startUrls are included automatically.
+  outOfScopeUrlPrefixes: # A list of URLs that you don't allow Burp Scanner to visit. Use this list to avoid scanning sites you don't have permission to scan.
+
+scanConfigurations:
+  named: # Select from Burp Scanner's built-in scan configurations. 
+  # Enter the name of the scan configuration as a list. The names of the scan configurations are case-sensitive.
+  # For a list of the available configurations, see https://portswigger.net/burp/documentation/scanner/scan-configurations/burp-scanner-built-in-configs
+  # You can stack scan configurations. If settings in two or more scan configurations conflict, the setting from the last configuration in the list takes precedence.
+  
+  custom: # Use a custom scan configuration. You can export custom scan configurations from Burp Suite Enterprise Edition in JSON format. Enter the paths to these files as a list. 
+
+logins:
+  loginCredentials:  # Enter a list of username and password pairs. Example:
+  #  - username: user1
+  #    password: password1
+  #  - username: user2
+  #    password: password2
+
+  recordedLogins: # A list of paths to files that contain the recorded login JSON scripts. 
+  # To record a login sequence, follow the instructions for recording a login sequence, and save the script as a JSON file: 
+  # https://portswigger.net/burp/documentation/scanner/authenticated-scanning/using-recorded-logins.html/#recording-a-login-sequence
+
+reporting:
+  ignoredIssues: # You can ignore specific vulnerabilities, on specific paths.
+  # For a list of vulnerabilities, see https://portswigger.net/burp/documentation/scanner/vulnerabilities-list.
+  # You can use regex for the paths. Omitting the path will cause the issue to be ignored everywhere.
+  # Example:
+  # - name: OS command injection
+  #   paths:
+  #   - www.website.com/path1
+  #   - .*/api/v1
+  # - name: SQL injection
+  #   paths:
+  #   - www.website.com/path2
+  #   - .*/api/[0-9]*
+
+  reportFilePath: # The path that the scan report is written to. This is in JUnit XML format.
+  # Defaults to burp_junit_report.xml in the working directory.
+
+  threshold: # Enter a minimum severity and a minimum confidence. 
+    # If Burp Scanner detects an issue with at least this severity and confidence, it finishes with a non-zero exit code. This tells your CI/CD system to fail the pipeline step. 
+    minimumSeverity: # Can be set to INFO, LOW, MEDIUM, HIGH. 
+    minimumConfidence: # Can be set to TENTATIVE, FIRM, CERTAIN.
