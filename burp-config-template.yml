@@ -38,7 +38,8 @@ logins:
   # https://portswigger.net/burp/documentation/scanner/authenticated-scanning/using-recorded-logins.html/#recording-a-login-sequence
 
 reporting:
-  ignoredIssues: # You can ignore specific vulnerabilities, on specific paths.
+  ignoredIssues: # You can ignore specific vulnerabilities on specific paths, so that they do not cause the build to fail.
+  # Burp Scanner still looks for these vulnerabilities and records them in the results.
   # For a list of vulnerabilities, see https://portswigger.net/burp/documentation/scanner/vulnerabilities-list.
   # You can use regex for the paths. Omitting the path will cause the issue to be ignored everywhere.
   # Example:
