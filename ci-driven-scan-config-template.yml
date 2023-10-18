@@ -83,6 +83,12 @@ reporting:
   # To set your own path and filename, enter this as a list.
   reportFilePath: 
   #  - /path/report-name.xml
+  
+  # The format of the reports outputted. Can be JUNIT or BURP_XML.
+  # Burp XML report are written to the working directory as burp_xml_report.xml
+  # Defaults to JUnit only.
+  reportFormats:
+  - JUNIT
 
   # Set the minimum severity and minimum confidence rules used to fail the build.
   # If Burp Scanner detects an issue with at least this severity and confidence, it instructs your CI/CD system to fail the build.
