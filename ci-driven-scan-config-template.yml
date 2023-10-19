@@ -99,3 +99,7 @@ reporting:
     
     # The lowest confidence issue required to fail the build. You can set this as TENTATIVE, FIRM or CERTAIN.
     minimumConfidence: # TENTATIVE
+    
+    # Set to false to make the container exit with return code 0 (success) regardless of any issues the scan finds. 
+    # This is useful if you want CI build steps to pass even if the scanner finds vulnerabilities.
+    enabled: true
