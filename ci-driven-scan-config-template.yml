@@ -103,3 +103,36 @@ reporting:
     # Set to false to make the container exit with return code 0 (success) regardless of any issues the scan finds. 
     # This is useful if you want CI build steps to pass even if the scanner finds vulnerabilities.
     enabled: true
+
+headersCookiesConfig:
+  # Enter a list of additional request headers/cookies, including name, value and scope prefix
+  #  - name: name1
+  #    scopePrefix: scopePrefix1
+  #    value: value1
+  #  - name: name11
+  #    scopePrefix: scopePrefix1
+  #    value: value1
+  headers:
+  cookies:
+
+platformAuthentication:
+  # Enter a list of additional platform authentication details
+  # - type: Choose from Basic, NTLM v1, or NTLM v2.
+  #   destinationHost: localhost
+  #   username: username
+  #   password: password
+  #   domain: domain - Only required for NTLM authentication
+  #   domainHostname: hostname - Only required for NTLM authentication
+
+proxies:
+  # Enter a list of proxy server configurations
+  # proxies:
+  # - authentication:
+  #     type: Choose from None, Basic, NTLM v1, or NTLM v2.
+  #     username: username
+  #     password: password
+  #     domain: domain
+  #     domainHostname: hostname
+  #   destinationHost: localHost
+  #   proxyHost: host
+  #   proxyPort: 8080
