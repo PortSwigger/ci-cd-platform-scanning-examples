@@ -126,7 +126,6 @@ platformAuthentication:
 
 proxies:
   # Enter a list of proxy server configurations
-  # proxies:
   # - authentication:
   #     type: Choose from None, Basic, NTLM v1, or NTLM v2.
   #     username: username
