@@ -43,7 +43,7 @@ scanConfigurations:
   # If settings in two or more scan configurations conflict, the setting from the lowest configuration in the list takes precedence.
   # Enter the names of the scan configurations as a list. The names are case-sensitive.
   builtIn: 
-  #  - Crawl and Audit - CICD optimized
+  #  - Crawl and Audit - CICD Optimized
   
   # You can use a custom scan configuration to fine-tune scan settings to meet your needs. 
   # Custom scan configurations can be created and exported in Burp Suite Enterprise Edition in JSON format. See https://portswigger.net/burp/documentation/enterprise/working-with-scans/scan-configurations
