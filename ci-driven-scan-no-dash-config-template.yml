@@ -32,7 +32,7 @@ scanConfigurations:
   # If settings in two or more scan configurations conflict, the setting from the lowest configuration in the list takes precedence.
   # Enter the names of the scan configurations as a list. The names are case-sensitive.
   builtIn: 
-  #  - Crawl and Audit - CICD optimized
+  #  - Crawl and Audit - CICD Optimized
 
 # Two application login methods are available; login credentials or recorded login sequences. Only one authentication method can be used per scan.
 # See https://portswigger.net/burp/documentation/scanner/authenticated-scanning
