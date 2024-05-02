@@ -89,7 +89,7 @@ headersCookiesConfig:
 
 platformAuthentication:
   # Enter a list of additional platform authentication details
-  # - type: Choose from Basic, NTLM v1, or NTLM v2.
+  # - type: Choose from BASIC, NTLM v1, or NTLM v2.
   #   destinationHost: localhost
   #   username: username
   #   password: password
@@ -100,7 +100,7 @@ proxies:
   # Enter a list of proxy server configurations
   # proxies:
   # - authentication:
-  #     type: Choose from None, Basic, NTLM v1, or NTLM v2.
+  #     type: Choose from None, BASIC, NTLM v1, or NTLM v2.
   #     username: username
   #     password: password
   #     domain: domain
