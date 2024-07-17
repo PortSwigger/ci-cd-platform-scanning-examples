@@ -8,7 +8,7 @@ If you would like to create a local copy of the template as a starting point for
 
 `docker run public.ecr.aws/portswigger/enterprise-scan-container:2024.5 --config-template > burp_config.yml`
 
-Remember to substitute the conatiner label with the version you are actually using 😉
+Remember to substitute the container label with the version you are actually using 😉
 
 ## Example output from version 2024.5
 
