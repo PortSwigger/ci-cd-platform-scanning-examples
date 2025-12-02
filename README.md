@@ -2,15 +2,15 @@
 
 From 2024.5 onwards, you can extract the default configuration template directly from the container using the following command:
 
-`docker run public.ecr.aws/portswigger/enterprise-scan-container:2024.5 --config-template`
+`docker run public.ecr.aws/portswigger/enterprise-scan-container:latest --config-template`
 
 If you would like to create a local copy of the template as a starting point for your own customisations, you can use the following command:
 
-`docker run public.ecr.aws/portswigger/enterprise-scan-container:2024.5 --config-template > burp_config.yml`
+`docker run public.ecr.aws/portswigger/enterprise-scan-container:latest --config-template > burp_config.yml`
 
-Remember to substitute the container label with the version you are actually using 😉
+We've used the `latest` tag in the above commands, but you can substitute it for an older version if needed.
 
-## Example output from version 2024.5
+## Example output from version 2025.10.3
 
 ```yaml
 # Use this file to configure your scan. Enter the values after the colon for each parameter.
@@ -98,28 +98,31 @@ Remember to substitute the container label with the version you are actually usi
 #     - .*/api/[0-9]*
 
 enterpriseServer:
-  # Enter the URL for your Enterprise server.
+  # Enter the URL for your DAST server.
   url: ${BURP_ENTERPRISE_SERVER_URL}
 
   # Enter the API key for your API user.
   apiKey: ${BURP_ENTERPRISE_API_KEY}
 
-  # If you are using a self-signed TLS certificate on your Enterprise server, add the public key of the certificate here. For example:
+  # If you are using a self-signed TLS certificate on your DAST server, add the public key of the certificate here. For example:
   # tlsCertificate: |-
   #   -----BEGIN CERTIFICATE-----
   #   ...
   #   -----END CERTIFICATE-----
   tlsCertificate: ${BURP_ENTERPRISE_SERVER_TLS_CERTIFICATE}
 
-  # If you need to use a proxy to connect to your Enterprise server, add the url and, optionally, the authentication credentials.
+  # If you need to use a proxy to connect to your DAST server, add the url and, optionally, the authentication credentials.
   proxyUrl: ${BURP_ENTERPRISE_SERVER_PROXY_URL}
   proxyUsername: ${BURP_ENTERPRISE_SERVER_PROXY_USERNAME}
   proxyPassword: ${BURP_ENTERPRISE_SERVER_PROXY_PASSWORD}
 
 site:
-  # If you define a correlationId, you can view the results of your scan on your Burp Suite Enterprise Edition dashboard.
-  # Burp Suite Enterprise Edition uses the correlation ID as the site name. You can use a maximum of 64 characters.
+  # If you define a correlationId, you can view the results of your scan on your Burp Suite DAST dashboard.
+  # Burp Suite DAST uses the correlation ID as the site name. You can use a maximum of 64 characters.
   correlationId: ${BURP_CORRELATION_ID}
+  # Optional: When correlationId doesn't match an existing site name, the new site will be created in the folder with this ID.
+  # Note that the folder must already exist otherwise the operation will fail saying: Site no found.
+  folderId: ${BURP_FOLDER_ID}
 
   scope:
     # You need to provide a list of one or more URLs that Burp Scanner starts scanning from.  For example:
@@ -139,8 +142,7 @@ site:
     #     $ BURP_START_URLS="www.vulnerable-website.com/,https://www.ginandjuice.shop"
     #
     #     startUrls: ${BURP_START_URLS}
-    startUrls:
-      - ${BURP_START_URL}
+    startUrls: ${BURP_START_URLS}
 
     # Detailed scope configuration settings
     # A list of URLs that you want to allow Burp Scanner to visit. The startUrls are included automatically. For example:
@@ -167,6 +169,97 @@ site:
     # outOfScopeUrlPrefixes: ${BURP_SITE_OUT_OF_SCOPE_URL_PREFIXES}
     outOfScopeUrlPrefixes: ${BURP_SITE_OUT_OF_SCOPE_URL_PREFIXES}
 
+  # Provide a URL for an API definition, or the path to the file if hosted locally, and any associated authentication schemes.
+  apiDefinition:
+    # Uses a hosted API definition file. You should provide the URL for your API definition file. For example:
+    #
+    # fromUrl: https://myserver/api/definition.yaml
+    #
+    # You can use the BURP_SITE_API_DEFINITION_URL environment variable. For example:
+    #
+    # $ BURP_SITE_API_DEFINITION_URL="https://myserver/api/definition.yaml"
+    #
+    # fromUrl: ${BURP_SITE_API_DEFINITION_URL}
+    fromUrl: ${BURP_SITE_API_DEFINITION_URL}
+
+    # Uses a local API definition file. You should provide the path to your API definition file. For example:
+    #
+    # fromFile: /path/to/api/definition.json
+    #
+    # You can use the BURP_SITE_API_DEFINITION_FILE_PATH environment variable. For example:
+    #
+    # $ BURP_SITE_API_DEFINITION_FILE_PATH="/path/to/api/definition.json"
+    #
+    # fromFile: ${BURP_SITE_API_DEFINITION_FILE_PATH}
+    fromFile: ${BURP_SITE_API_DEFINITION_FILE_PATH}
+
+    # Enter a list of API authentication schemes. For example:
+    #  authentications:
+    #  - label: headerAuth1
+    #    type: apiKey
+    #    in: header
+    #    name: X-API-Key-Header-1
+    #    key: your-api-key-header-1
+    #  - label: queryAuth1
+    #    type: apiKey
+    #    in: query
+    #    name: api_key_query_1
+    #    key: your-api-key-query-1
+    #  - label: cookieAuth1
+    #    type: apiKey
+    #    in: cookie
+    #    name: api_key_cookie_1
+    #    key: your-api-key-cookie-1
+    #  - label: basicAuth1
+    #    type: http
+    #    scheme: basic
+    #    username: your-username
+    #    password: your-secret-password
+    #  - label: bearerAuth1
+    #    type: http
+    #    scheme: bearer
+    #    token: your-bearer-token-1
+    #  - label: bearerAuthDynamic
+    #    type: http
+    #    scheme: bearer
+    #    dynamicTokenConfig:
+    #      url: http://your-auth-server:port/path
+    #      method: post
+    #      headers:
+    #      - name: X-Header-Name
+    #        value: your-header-value
+    #      - name: X-Header-Name-2
+    #        value: your-header-value-2
+    #      body: {"token-request":{"secret": "your-secret"}}
+    #      extractPath: token
+    #      refreshInterval: 10
+    #
+    # An API authentication can be defined in 2 ways:
+    # 1. Full definition: include label, type-specific fields, and secret fields. Use this to define new authentication schemes. For example
+    # - label: basicAuth1
+    #   type: http
+    #   scheme: basic
+    #   username: your-username
+    #   password: your-secret-password
+    # 2. Providing secrets: includes only label and secret fields. Use this to provide secrets for authentication schemes defined in the API definition. For example
+    # - label: basicAuth1
+    #   username: your-username
+    #   password: your-secret-password
+    #
+    # When specifying bearer or apiKey authentications, either fixed or dynamic tokens can be used. In the examples above, fixed tokens are specified in the token or key fields respectively,
+    # and dynamic tokens are specified in the dynamicTokenConfig field.
+    # The dynamic token config will be used to make an HTTP request to the specified URL, the request will be constructed using the information provided for method, headers and body.
+    # The token will be extracted from the response body using the value specified for extractPath. For JSON responses this can be a dot-separated list of field names
+    # indicating the path to the token. For XML responses the extractPath can be an XPath expression. If extractPath is left blank, the entire response body will be used as the token.
+    # The request will be repeated within the refreshInterval time (seconds) to refresh the token.
+    #
+    # You can use the environment variable BURP_SITE_API_DEFINITION_AUTHENTICATIONS. This should contain a JSON array containing zero or more API authentication schemes. For example:
+    #
+    # $ BURP_SITE_API_DEFINITION_AUTHENTICATIONS='[{"label": "headerAuth1", "type": "apiKey", "in": "header", "name": "X-API-Key-Header-1", "key": "your-api-key-header-1"}, {"label": "basicAuth1", "type": "http", "scheme": "basic", "username": "your-username", "password": "your-secret-password"}]'
+    #
+    # authentications: ${BURP_SITE_API_DEFINITION_AUTHENTICATIONS}
+    authentications: ${BURP_SITE_API_DEFINITION_AUTHENTICATIONS}
+
 scanConfigurations:
   # Select from Burp Scanner's built-in scan configurations.
   # Enter the name of the scan configuration as a list. The names of the scan configurations are case-sensitive.
@@ -183,7 +276,7 @@ scanConfigurations:
   # builtIn: ${BURP_SCAN_CONFIGURATIONS}
   builtIn: ${BURP_SCAN_CONFIGURATIONS:-Crawl and Audit - CICD Optimized}
 
-  # Use a custom scan configuration. You can export custom scan configurations from Burp Suite Enterprise Edition in JSON format. Enter the paths to these files as a list.
+  # Use a custom scan configuration. You can export custom scan configurations from Burp Suite DAST in JSON format. Enter the paths to these files as a list.
   # custom:
   # - custom-config1.json
   # - custom-config2.json
@@ -203,7 +296,7 @@ logins:
   #  - username: user2
   #    password: password2
   #
-  # You can use the environment variable BURP_RECORDED_LOGINS.  This can contain a JSON array containing zero or more login credentials. For example:
+  # You can use the environment variable BURP_LOGIN_CREDENTIALS.  This can contain a JSON array containing zero or more login credentials. For example:
   #
   # $ BURP_LOGIN_CREDENTIALS='[{"username": "user1", "password": "password1"}, {"username": "user2", "password": "password2"}]'
   #
@@ -250,11 +343,10 @@ reporting:
   # You need to define the destination path for the report.
   reportFilePath: ${BURP_REPORT_FILE_PATH:-burp_junit_report.xml}
 
-  # You can specify the format of the reports produced. Select JUNIT or BURP_XML.
-  # Burp XML report are written to the working directory as burp_xml_report.xml
+  # You can specify the format of the reports produced. Select JUNIT or BURP_XML or both.
+  # Burp XML reports are written to the working directory as burp_xml_report.xml
   # Defaults to JUnit only.
-  reportFormats:
-    - ${BURP_REPORT_FORMAT:-JUNIT}
+  reportFormats: ${BURP_REPORT_FORMATS:-JUNIT}
 
   # Enter a minimum severity and a minimum confidence.
   # If Burp Scanner detects an issue with at least this severity and confidence, it finishes with a non-zero exit code.
@@ -338,6 +430,36 @@ platformAuthentication: ${BURP_PLATFORM_AUTHENTICATION}
   #
   # proxies: ${BURP_PROXIES}
 proxies: ${BURP_PROXIES}
+
+  # Controls the amount of detail provided in the output during a scan.
+verboseScanning:
+  # Can be either true or false:
+  # enabled: true  - The scan produces detailed output, making it easier to troubleshoot and gain deeper insights into what the scan is doing.
+  # enabled: false - The scan produces minimal output, showing only the most important information. This mode is useful
+  #                  for routine scans where detailed information is not necessary.
+  enabled: ${BURP_VERBOSE_SCANNING_ENABLED:-false}
+
+# Controls the extensions applied to the scan
+extensions:
+  # List of filenames of extensions to be applied to the scan. The extension files need to be saved in the root of the working directory.
+  #
+  # You can use the environment variable BURP_EXTENSIONS. This can contain filenames of zero or more extensions. For example:
+  #
+  # $ BURP_EXTENSIONS="extension_1.jar,extension_2.jar"
+  #
+  # filenames: ${BURP_EXTENSIONS}
+  filenames: ${BURP_EXTENSIONS}
+
+# Controls the bchecks applied to the scan
+bchecks:
+  # List of filenames of bchecks to be applied to the scan. The bcheck files need to be saved in the root of the working directory.
+  #
+  # You can use the environment variable BURP_BCHECKS. This can contain filenames of zero or more bchecks. For example:
+  #
+  # $ BURP_BCHECKS="test1.bcheck,test2.bcheck"
+  #
+  # filenames: ${BURP_BCHECKS}
+  filenames: ${BURP_BCHECKS}
 ```
 
 > [!NOTE]
