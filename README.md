@@ -4,11 +4,12 @@ From 2024.5 onwards, you can extract the default configuration template directly
 
 `docker run public.ecr.aws/portswigger/enterprise-scan-container:2024.5 --config-template`
 
-If you would like to create a local copy of the template as a starting point for your own customisations, you can use the following command:
+Remember to replace the image version tag with the version of Burp Suite DAST you have installed. Using the `latest` tag is not recommended, as the image associated with `latest` may not match your installed version of Burp Suite DAST and can result in an incompatible configuration template. If you do choose to use the `latest` tag, always include `--pull=always` to ensure Docker downloads the most recent image for that tag. Without `--pull=always`, Docker may reuse a locally cached image, which could lead to generating a template from the wrong (older) version of the image, causing potential compatibility issues.
+
+If you would like to create a local copy of the template as a starting point for your own customisations, you can use the following command to output a YAML file:
 
 `docker run public.ecr.aws/portswigger/enterprise-scan-container:2025.10.1 --config-template > burp_config.yml`
 
-Remember to substitute the container version label with the version of Burp Suite DAST you currently have installed. Using the latest tag may result in the template being incompatible with your version of DAST. 
 
 ## Example output from version 2025.10.1
 
